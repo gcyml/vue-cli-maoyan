@@ -1,11 +1,13 @@
 <template>
   <div>
+    <!-- isReady: 数据加载好了就不显示loading动画 -->
+    <loading v-if="!isReady"></loading>
     <div class="hopeful">
       <p>近期最受期待</p>
       <div class="img-list" ref="imglist">
         <div class="hopeful-list" v-for="(item,index) in hopefulList" :key="index">
           <div class="hope-img">
-            <img :src="item.img.replace('w.h','128.180')" alt>
+            <img :src="item.img.replace('w.h','128.180')" alt />
             <p class="wish">{{item.wish}}想看</p>
           </div>
           <div class="hopeful-info">
@@ -35,7 +37,8 @@ export default {
       comingList: [],
       hopefulList: [],
       imglistMarginLeft: 0,
-      sumMarginLeft: 0
+      sumMarginLeft: 0,
+      isReady:false // 记录数据是否加载完毕
     };
   },
   created() {
@@ -49,18 +52,13 @@ export default {
         "http://www.softeem.xin/maoyanApi/ajax/mostExpected?ci=57&limit=10&offset=0&token="
       );
     }
-    getHopefulList().then(hopeRes => {
-             this.hopefulList = hopeRes.data.coming;
-         });
-   getComingList().then(comRes => {
-            this.comingList = comRes.data.movieList;
-         });
-   //  axios.all([getComingList(), getHopefulList()]).then(
-   //    axios.spread((comRes, hopeRes) => {
-   //      this.comingList = comRes.data.coming;
-   //      this.hopefulList = hopeRes.data.coming;
-   //    })
-   //  );
+     axios.all([getComingList(), getHopefulList()]).then(
+       axios.spread((comRes, hopeRes) => {
+         this.comingList = comRes.data.coming;
+         this.hopefulList = hopeRes.data.coming;
+         this.isReady = true;
+       })
+     );
   }
 };
 </script>

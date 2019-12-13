@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div @click="$router.push({name:'movieDetail'})" class="movie-list">
+    <div @click="$router.push({name:'movieDetail',query:{id:mitem.id}})" class="movie-list">
       <div class="movie-img">
-        <img :src="mitem.img.replace('w.h','128.180')" alt>
+        <img v-lazy="mitem.img.replace('w.h','128.180')" alt>
       </div>
       <div class="right-info">
         <ul class="movie-info">
